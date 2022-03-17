@@ -1,0 +1,13 @@
+docker build . -t cambank/accounts --> Command to create image from Dockerfile
+docker run -d -p 8081:8081 cambank/accounts ---> Run container
+docker ps ---> List running containers
+docker logs {containerId} --> Watch container logs
+docker -f logs {containerId} --> Follow container logs
+docker stop {containerId} --> Stop container
+docker ps -a --> Watch all containers
+docker run {idContainer1 idContainer2} --> Run several containers at simultaniously
+docker stats --> Watch docker statistics
+docker-compose version --> Check docker-compose version
+
+Important
+use gradle task bootBuildImage that is present under the spring boot gradle plugin to generate docker image

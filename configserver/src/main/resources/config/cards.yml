@@ -1,0 +1,12 @@
+cards:
+  msg: Welcome to the Cambank Cards Default application
+  build-version: '3'
+  mailDetails:
+    hostName: default-cards@eazybytes.com
+    port: '9002'
+    from: default-cards@eazybytes.com
+    subject: Your Card Details from Eazy Bank Default Environment
+  activeBranches:
+    - Mumbai
+    - London
+    - Washington

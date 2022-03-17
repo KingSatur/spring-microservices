@@ -1,0 +1,12 @@
+loans:
+  msg: Welcome to the Cambank Loans Prod application
+  build-version: '1'
+  mailDetails:
+    hostName: prod-loans@eazybytes.com
+    port: '9011'
+    from: prod-loans@eazybytes.com
+    subject: Your Loan Details from Eazy Bank Production Environment
+  activeBranches:
+    - Hyderabad
+    - Paris
+    - NewYork

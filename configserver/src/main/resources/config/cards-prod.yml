@@ -1,0 +1,12 @@
+cards:
+  msg: Welcome to the Cambank Cards Prod application
+  build-version: '1'
+  mailDetails:
+    hostName: prod-cards@eazybytes.com
+    port: '9012'
+    from: prod-cards@eazybytes.com
+    subject: Your Card Details from Eazy Bank Production Environment
+  activeBranches:
+    - Hyderabad
+    - Paris
+    - NewYork

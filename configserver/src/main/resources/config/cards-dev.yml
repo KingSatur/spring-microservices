@@ -1,0 +1,12 @@
+cards:
+  msg: Welcome to the Cambank Cards Dev application
+  build-version: '2'
+  mailDetails:
+    hostName: dev-cards@eazybytes.com
+    port: '9022'
+    from: dev-cards@eazybytes.com
+    subject: Your Card Details from Eazy Bank Dev Environment
+  activeBranches:
+    - Chennai
+    - Berlin
+    - Indianapollis

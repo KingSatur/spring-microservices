@@ -1,0 +1,12 @@
+accounts:
+  msg: Welcome to the Cambank Accounts Dev application
+  build-version: '2'
+  mailDetails:
+    hostName: dev-accounts@eazybytes.com
+    port: '9020'
+    from: dev-accounts@eazybytes.com
+    subject: Your Account Details from Eazy Bank Dev Environment
+  activeBranches:
+    - Chennai
+    - Berlin
+    - Indianapollis

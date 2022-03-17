@@ -1,0 +1,12 @@
+accounts:
+  msg: Welcome to the Cambank Accounts Default application
+  build-version: '3'
+  mailDetails:
+    hostName: default-accounts@eazybytes.com
+    port: '9000'
+    from: default-accounts@eazybytes.com
+    subject: Your Account Details from Eazy Bank Default Environment
+  activeBranches:
+    - Mumbai
+    - London
+    - Washington
