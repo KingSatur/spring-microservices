@@ -21,6 +21,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+
 @RestController
 public class AccountsController {
 
@@ -40,6 +44,9 @@ public class AccountsController {
 		this.cardsClient = cardsClient;
 	}
 	
+//	@CircuitBreaker(name = "customerDetailsCircuitBreaker", fallbackMethod = "customerDetailsError")
+	@CircuitBreaker(name = "customerDetailsCircuitBreaker", fallbackMethod = "retrygetCustomerDetailsFallback")
+	@Retry(name = "retryCustomerDetail")
 	@GetMapping("/user/{customer-id}")
 	public ResponseEntity<CustomerDetail> getCustomerDetails(@PathVariable("customer-id") long customerId){
 		Account account = this.accountsRepository.findByCustomerId((int)customerId);
@@ -54,6 +61,14 @@ public class AccountsController {
 		return ResponseEntity.ok(customerDetails);
 	}
 	
+//	public ResponseEntity retrygetCustomerDetailsFallback(long customerId, Throwable exception) {
+//		
+//	}
+	
+//	public ResponseEntity<CustomerDetail> getCustomerDetailsFallbackMethod(long customerId, Throwable exception){
+//		
+//	}
+	
 	
 	@GetMapping("/props")
 	public ResponseEntity<String> getProps() throws JsonProcessingException{
@@ -64,5 +79,14 @@ public class AccountsController {
 		return ResponseEntity.ok( jsonStr);
 	}
 	
+	@GetMapping("/say-hello")
+	@RateLimiter(name = "sayHello", fallbackMethod = "sayHelloFallback")
+	public String sayHello() {
+		return "hellow woman";
+	}
+	
+	public String sayHelloFallback( Throwable exception) {
+		return "There are too many request";
+	}
 	
 }

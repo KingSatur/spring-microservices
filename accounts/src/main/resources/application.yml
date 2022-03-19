@@ -27,13 +27,38 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8070/eureka/    
+      defaultZone: http://localhost:8073/eureka/
 info:
   app:
     name: accounts microservice
     description: Cambank accounts microservice
     version: 1.0.0
-
+    
+resilience4j:
+  circuitbreaker:
+    configs:
+      default: 
+        register-health-indicator: true
+    instances:
+      customerDetailsCircuitBreaker:
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30000
+        permitted-number-of-calls-in-half-open-state: 2
+  retry:
+    instances:
+      retryCustomerDetail:
+        max-attempts: 3
+        wait-duration: 2000
+  ratelimiter:
+    configs:
+      default:
+        register-health-indicator: true
+    instances:
+      sayHello:
+        timeout-duration: 5000
+        limit-refresh-period: 5000
+        limit-for-period: 1    
 management:
   info:
     env:

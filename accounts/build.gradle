@@ -37,6 +37,10 @@ dependencies {
 	implementation group: 'com.h2database', name: 'h2', version: '2.1.210'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'io.github.resilience4j:resilience4j-spring-boot2'
+	implementation 'io.github.resilience4j:resilience4j-circuitbreaker'
+	implementation 'io.github.resilience4j:resilience4j-timelimiter'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	
 }
 
