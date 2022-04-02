@@ -2,11 +2,10 @@ package com.cambank.cards.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cambank.cards.entity.Card;
 import com.cambank.cards.entity.Properties;
@@ -21,6 +20,7 @@ public class CardController {
 	
 	private final CardRepository cardRepository;
 	private final CardsConfigurationProps cardsConfigurationProps;
+	private static final Logger logger = LoggerFactory.getLogger(CardController.class);
 	
 	public CardController(CardRepository cardRepository, CardsConfigurationProps cardsConfigurationProps) {
 		this.cardRepository = cardRepository;
@@ -29,7 +29,10 @@ public class CardController {
 	
 	
 	@GetMapping("/user/{customerId}")
-	public ResponseEntity<List<Card>> getLoans(@PathVariable int customerId) {
+	public ResponseEntity<List<Card>> getLoans(
+			@RequestHeader("cambank-correlation-id") String correlationId,
+			@PathVariable int customerId) {
+		logger.info("Request " + correlationId + " arrives to cards microservices");
 		return ResponseEntity.ok(this.cardRepository.findByCustomerId(customerId));
 	}
 	

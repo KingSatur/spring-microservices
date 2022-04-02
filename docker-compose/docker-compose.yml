@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  accounts:
+    image: cambank/accounts
+    mem_limit: 700m
+    ports:
+      - '8081:8081'
+    networks:
+      - cambank-network
+  loans:
+    image: cambank/loans
+    mem_limit: 700m
+    ports:
+      - '8082:8082'
+    networks:
+      - cambank-network
+  cards:
+    image: cambank/cards
+    mem_limit: 700m
+    ports:
+      - '8083:8083'
+    networks:
+      - cambank-network
+
+networks:
+  cambank-network:

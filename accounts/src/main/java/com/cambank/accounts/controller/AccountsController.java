@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cambank.accounts.configuration.AccountsConfigurationProps;
@@ -45,13 +46,15 @@ public class AccountsController {
 	}
 	
 //	@CircuitBreaker(name = "customerDetailsCircuitBreaker", fallbackMethod = "customerDetailsError")
-	@CircuitBreaker(name = "customerDetailsCircuitBreaker", fallbackMethod = "retrygetCustomerDetailsFallback")
-	@Retry(name = "retryCustomerDetail")
+//	@CircuitBreaker(name = "customerDetailsCircuitBreaker", fallbackMethod = "retrygetCustomerDetailsFallback")
+//	@Retry(name = "retryCustomerDetail")
 	@GetMapping("/user/{customer-id}")
-	public ResponseEntity<CustomerDetail> getCustomerDetails(@PathVariable("customer-id") long customerId){
+	public ResponseEntity<CustomerDetail> getCustomerDetails(
+			@RequestHeader("cambank-correlation-id") String correlationId,
+			@PathVariable("customer-id") long customerId){
 		Account account = this.accountsRepository.findByCustomerId((int)customerId);
-		List<Loan> loans = this.loansClient.getLoansByCustomer(customerId);
-		List<Card> cards = this.cardsClient.getCardsByCustomer((int) customerId);
+		List<Loan> loans = this.loansClient.getLoansByCustomer(correlationId, customerId);
+		List<Card> cards = this.cardsClient.getCardsByCustomer(correlationId, (int) customerId);
 		
 		CustomerDetail customerDetails = new CustomerDetail();
 		customerDetails.setAccounts(account);

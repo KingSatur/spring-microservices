@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.cambank'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '14'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -16,14 +16,12 @@ ext {
 	set('springCloudVersion', "2021.0.1")
 }
 
-bootBuildImage{ 
-  imageName="nkdjlqh90123cambank/${project.name}"
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.cloud:spring-cloud-config-server'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+	implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin'
 
 }
 

@@ -1,0 +1,3 @@
+docker-compose up ---> Run docker compuse file
+docker-compose -d up ---> Run docker compose file in detached 
+docker-compose stop ---> Stop all containers under docker-compose 

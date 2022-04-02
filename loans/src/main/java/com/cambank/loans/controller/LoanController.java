@@ -3,11 +3,10 @@ package com.cambank.loans.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cambank.loans.entity.Loan;
 import com.cambank.loans.entity.Properties;
@@ -22,6 +21,7 @@ public class LoanController {
 	
 	private final LoanRepository loanRepository;
 	private final LoansConfigurationProps loansConfigurationProps;
+	private static final Logger logger = LoggerFactory.getLogger(LoanController.class);
 	
 	public LoanController(LoanRepository loanRepository, LoansConfigurationProps loansConfigurationProps) {
 		this.loanRepository = loanRepository;
@@ -30,7 +30,10 @@ public class LoanController {
 	
 	
 	@GetMapping("/user/{customerId}")
-	public ResponseEntity<List<Loan>> getLoans(@PathVariable long customerId) {
+	public ResponseEntity<List<Loan>> getLoans(
+			@RequestHeader("cambank-correlation-id") String correlationId,
+			@PathVariable long customerId) {
+		logger.info("Request " + correlationId + " arrives to cards microservices");
 		return ResponseEntity.of(Optional.of(this.loanRepository.findByCustomerIdOrderByStartedAtDesc(customerId)));
 	}
 	
