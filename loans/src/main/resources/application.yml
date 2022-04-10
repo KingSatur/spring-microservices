@@ -59,22 +59,36 @@ info:
     name: loans microservice
     description: Cambank loans microservice
     version: 1.0.0
-    
+
 management:
   info:
     env:
       enabled: true
   endpoint:
-   shutdown:
+    shutdown:
       enabled: true
-   metrics:
-    enabled: true
+    metrics:
+      enabled: true
   endpoints:
-   web:
-    exposure:
-     include: 
-      - refresh
-      - info
+    web:
+      exposure:
+        include: '*'
+    
+#management:
+#  info:
+#    env:
+#      enabled: true
+#  endpoint:
+#   shutdown:
+#      enabled: true
+#   metrics:
+#    enabled: true
+#  endpoints:
+#   web:
+#    exposure:
+#     include:
+#      - refresh
+#      - info
 
 
 

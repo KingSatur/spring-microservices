@@ -3,6 +3,7 @@ package com.cambank.accounts.controller;
 
 import java.util.List;
 
+import io.micrometer.core.annotation.Timed;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,7 @@ public class AccountsController {
 //	@CircuitBreaker(name = "customerDetailsCircuitBreaker", fallbackMethod = "retrygetCustomerDetailsFallback")
 //	@Retry(name = "retryCustomerDetail")
 	@GetMapping("/user/{customer-id}")
+	@Timed(value = "getCusomterDetails.time", description = "Time token to get customer details")
 	public ResponseEntity<CustomerDetail> getCustomerDetails(
 			@RequestHeader("cambank-correlation-id") String correlationId,
 			@PathVariable("customer-id") long customerId){

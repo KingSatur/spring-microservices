@@ -2,7 +2,7 @@ docker build . -t cambank/accounts --> Command to create image from Dockerfile
 docker run -d -p 8081:8081 cambank/accounts ---> Run container
 docker ps ---> List running containers
 docker logs {containerId} --> Watch container logs
-docker -f logs {containerId} --> Follow container logs
+docker logs -f {containerId} --> Follow container logs
 docker stop {containerId} --> Stop container
 docker ps -a --> Watch all containers
 docker run {idContainer1 idContainer2} --> Run several containers at simultaniously
@@ -27,3 +27,8 @@ first port -> UI application --> Default user: guest, default pass: guest
 
 
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+
+git tag --> List all tags
+git tag -a v1.4 -m "My last tag" --> Create tag
+git push origin --tags

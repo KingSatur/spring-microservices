@@ -65,13 +65,11 @@ management:
     env:
       enabled: true
   endpoint:
-   shutdown:
+    shutdown:
       enabled: true
-   metrics:
-    enabled: true
+    metrics:
+      enabled: true
   endpoints:
-   web:
-    exposure:
-     include: 
-      - refresh
-      - info
+    web:
+      exposure:
+        include: '*'

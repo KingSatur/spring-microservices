@@ -1,0 +1,192 @@
+version: '3.8'
+
+services:
+  #This is grafa and is not mandatory for prometheus to work
+  grafana:
+    image: 'grafana/grafana:latest'
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    networks:
+      - cambank
+    depends_on:
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - cambank
+
+  zipkin:
+    image: openzipkin/zipkin
+    mem_limit: 700m
+    ports:
+      - '9411:9411'
+    networks:
+      - cambank
+
+  configserver:
+    image: cambank/configserver
+    mem_limit: 700m
+    ports:
+      - '8071:8071'
+    networks:
+      - cambank
+    depends_on:
+      - zipkin
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  eurekaserver:
+    image: cambank/eurekaserver
+    mem_limit: 700m
+    ports:
+      - '8073:8073'
+    networks:
+      - cambank
+    depends_on:
+      - configserver
+      - zipkin
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 80s
+        max_attempts: 3
+        window: 120s
+    environment:
+      ##Inject properties to spring
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  accounts:
+    image: cambank/accounts
+    mem_limit: 700m
+    ports:
+      - '8081:8081'
+    networks:
+      - cambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 100s
+        max_attempts: 3
+        window: 120s
+    environment:
+      ##Inject properties to spring
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8073/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  ##Other instance of accounts microservices
+  accounts2:
+    image: cambank/accounts
+    mem_limit: 700m
+    ports:
+      - '8084:8081'
+    networks:
+      - cambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 100s
+        max_attempts: 3
+        window: 120s
+    environment:
+      ##Inject properties to spring
+      #This is the properties file that is going to take from configserver
+      SPRING_PROFILES_ACTIVE: local
+      #This is the config server url
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071
+      #This is the eureka server url, where the microservice will register
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8073/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  loans:
+    image: cambank/loans
+    mem_limit: 700m
+    ports:
+      - '8082:8082'
+    networks:
+      - cambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 100s
+        max_attempts: 3
+        window: 120s
+    environment:
+      ##Inject properties to spring
+      #This is the properties file that is going to take from configserver
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8073/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  cards:
+    image: cambank/cards
+    mem_limit: 700m
+    ports:
+      - '8083:8083'
+    networks:
+      - cambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 100s
+        max_attempts: 3
+        window: 120s
+    environment:
+      ##Inject properties to spring
+      #This is the properties file that is going to take from configserver
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8073/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  apigateway:
+    image: cambank/api-gateway
+    mem_limit: 700m
+    ports:
+      - '8072:8072'
+    networks:
+      - cambank
+    depends_on:
+      - configserver
+      - eurekaserver
+      - cards
+      - loans
+      - accounts
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 260s
+        max_attempts: 20
+        window: 1000s
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8073/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+networks:
+  cambank:
