@@ -16,6 +16,7 @@ import java.util.Date;
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {
+		System.out.println("hola");
 		SpringApplication.run(ApiGatewayApplication.class, args);
 	}
 
